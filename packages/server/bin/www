@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 
 /**
+ * Require local dev environment variables
+ */
+
+ if (process.env.NODE_ENV === "production") {
+   require('dotenv').config();
+ };
+
+/**
  * Module dependencies.
  */
 
@@ -88,3 +96,14 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+// Settings for build folder
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, 'build')));
+
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+};
+
+// Define routes
